@@ -1,0 +1,45 @@
+name: Deploy aaron-kokal.com
+
+on:
+  push:
+    branches: [ main ]
+    # Only trigger when this site (or its workflow) changes
+    paths:
+      - 'sites/aaron-kokal.com/**'
+      - '.github/workflows/deploy-aaron-kokal.com.yml'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: deploy-aaron-kokal.com
+      cancel-in-progress: true
+    environment:
+      name: aaron-kokal.com-prod
+      url: https://aaron-kokal.com
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup SSH
+        env:
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -p "$SSH_PORT" "$SSH_HOST" >> ~/.ssh/known_hosts
+
+      - name: Rsync deploy
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          WEBROOT: ${{ secrets.WEBROOT }}
+        run: |
+          rsync -az --delete \
+            -e "ssh -p ${SSH_PORT}" \
+            sites/aaron-kokal.com/public/ \
+            ${SSH_USER}@${SSH_HOST}:${WEBROOT}
