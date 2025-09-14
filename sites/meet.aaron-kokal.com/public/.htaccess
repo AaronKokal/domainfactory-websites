@@ -1,4 +1,0 @@
-RewriteEngine On
-# 302 while link may change; switch to 301 once you are 100% sure
-RewriteRule ^.*$ https://meet.google.com/hev-rsmb-vdg [R=302,L]
-

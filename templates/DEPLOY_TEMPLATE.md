@@ -1,3 +1,7 @@
+Moved from repo root. See this file for GitHub Actions rsync workflow and `.deployignore` guidance for per‑site deploys.
+
+The original content is preserved below.
+
 **Purpose**
 - Copy-paste template for deploying a site from GitHub Actions to DomainFactory via rsync over SSH.
 

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://frontmatter.codes/frontmatter.schema.json",
+  "frontMatter.framework.id": "docusaurus",
+  "frontMatter.content.pageFolders": [
+    {
+      "title": "Project Docs",
+      "path": "[[workspace]]/docs/project_docs"
+    },
+    {
+      "title": "Framework",
+      "path": "[[workspace]]/docs/framework"
+    },
+    {
+      "title": "Deep Dives",
+      "path": "[[workspace]]/docs/deep_dives"
+    },
+    {
+      "title": "Reports",
+      "path": "[[workspace]]/docs/reports"
+    }
+  ],
+  "frontMatter.git.enabled": true
+}
+
