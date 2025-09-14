@@ -46,7 +46,9 @@ jobs:
           SSH_PORT: ${{ secrets.SSH_PORT }}
           SSH_USER: ${{ secrets.SSH_USER }}
         run: |
-          ssh -o BatchMode=yes -o IdentitiesOnly=yes -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" 'echo ok'
+          chmod 700 ~/.ssh
+          chmod 600 ~/.ssh/known_hosts || true
+          ssh -i ~/.ssh/id_ed25519 -o BatchMode=yes -o IdentitiesOnly=yes -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" 'echo ok'
 
       - name: Rsync deploy
         env:
@@ -56,6 +58,6 @@ jobs:
           WEBROOT: ${{ secrets.WEBROOT }}
         run: |
           rsync -az --delete \
-            -e "ssh -p ${SSH_PORT}" \
+            -e "ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes -p ${SSH_PORT}" \
             sites/aaron-kokal.com/public/ \
             ${SSH_USER}@${SSH_HOST}:${WEBROOT}
