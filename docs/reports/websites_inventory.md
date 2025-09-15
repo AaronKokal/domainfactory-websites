@@ -13,6 +13,7 @@ Top Level
 
 Sites
 - aaron-kokal.com — `/kunden/485413_81379/webseiten/aaron-kokal.com/public` (Static; CI configured)
+- meet.aaron-kokal.com — Panel redirect → https://meet.google.com/hev-rsmb-vdg (no repo/CI)
 - schallvagabunden — `/kunden/485413_81379/webseiten/schallvagabunden` (WordPress)
 - aaronvincent — `/kunden/485413_81379/webseiten/aaronvincent/wordpress` (WordPress)
 - kokalcoach — `/kunden/485413_81379/webseiten/kokalcoach/wordpress/wordpress` (WordPress; nested)
@@ -27,6 +28,7 @@ Backup/Update Folders
 - Many sites contain `wordpress_YYYY…` backup/update directories. Do not deploy to or delete without verification.
 
 Panel Paths (relative for Zielverzeichnis)
+- meet.aaron-kokal.com — handled via panel redirect (no Zielverzeichnis)
 - `webseiten/aaron-kokal.com/public`
 - `webseiten/schallvagabunden`
 - `webseiten/aaronvincent/wordpress`

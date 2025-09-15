@@ -22,3 +22,7 @@ categories: [Project]
 - Generated CI deploy key; appended public key to server's `~/.ssh/authorized_keys` for `ssh-485413-admin`.
 - Resolved runner auth (exit 255) by explicitly using the identity file and validating secrets.
 - Result: push to `main` auto‑deploys `sites/aaron-kokal.com/public` to `/kunden/485413_81379/webseiten/aaron-kokal.com/public`. Verified live.
+
+2025-09-14 — Meet Subdomain Redirect
+- Decision: serve `meet.aaron-kokal.com` via DomainFactory panel redirect to `https://meet.google.com/hev-rsmb-vdg`.
+- Action: removed repo-based meet subsite and CI workflow; no code or CI needed for the redirect.
