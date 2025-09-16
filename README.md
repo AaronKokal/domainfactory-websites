@@ -9,8 +9,7 @@ Purpose
 Current Layout
 - `docs/` — framework + living project docs (tasks, logs, structure, inventories, deep dives).
 - `scripts/` — helper scripts for deploys and maintenance.
-- `templates/` — CI/CD workflow blueprints and server configs.
-- `.github/workflows/` — automation that operates on the shared assets (e.g. deployment templates).
+- `templates/` — CI/CD workflow blueprints and server configs (workflows now live under `templates/workflows/`).
 
 Working With Site Repos
 1. Clone or create the site repository next to this folder, e.g. `../sites/aaron-kokal.com`.
@@ -20,7 +19,7 @@ Working With Site Repos
 
 Bootstrapping a New Site
 - Scaffold a new repo under `../sites/<subdomain>`.
-- Copy the relevant template from `templates/` (deploy workflow, `.deployignore`, etc.).
+- Copy the relevant template from `templates/` (e.g., `templates/workflows/deploy-aaron-kokal.com.yml`, `.deployignore`, etc.).
 - Record the site and webroot in `docs/reports/websites_inventory.md` and any task logs.
 
 Notes

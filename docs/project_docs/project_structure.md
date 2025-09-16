@@ -10,12 +10,11 @@ categories: [Project]
 Repository Layout (`sites-master/`)
 - `docs/` — shared documentation for all sites (framework, project docs, deep dives, reports).
 - `scripts/` — helper scripts for deploys and maintenance.
-- `templates/` — reusable workflow/server templates.
-- `.github/workflows/` — automation that acts on shared assets (e.g., workflow templates); does **not** deploy individual sites directly anymore.
+- `templates/` — reusable workflow/server templates (per-site GitHub Actions YAML files live in `templates/workflows/`).
 
 Sibling Layout (`../sites/`)
 - Each site is a standalone Git repository cloned beside this coordination repo (e.g., `../sites/aaron-kokal.com`).
-- Site repos own their build artifacts, GitHub Pages settings, and deployment workflows.
+- Site repos own their build artifacts, GitHub Pages settings, and deployment workflows. Copy needed templates from this repo into each site.
 
 Server Layout (DomainFactory SSH chroot)
 - Home root: `/kunden/485413_81379`
