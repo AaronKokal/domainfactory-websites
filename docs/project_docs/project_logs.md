@@ -26,3 +26,10 @@ categories: [Project]
 2025-09-14 — Meet Subdomain Redirect
 - Decision: serve `meet.aaron-kokal.com` via DomainFactory panel redirect to `https://meet.google.com/hev-rsmb-vdg`.
 - Action: removed repo-based meet subsite and CI workflow; no code or CI needed for the redirect.
+
+2025-09-16 — Repo Split Prep
+- Moved monorepo assets into new `sites-master/` folder and re-scoped Git metadata so coordination repo no longer tracks `sites/`.
+- Renamed remote repository to `sites-master` to match new role.
+- Updated README and project structure docs to reflect coordination-only responsibilities.
+- Created local scaffold `../sites/lab.aaron-kokal.com/index.html` for upcoming standalone repo.
+- Identified need to relocate per-site deployment workflow into each site repo (current workflow in `.github/workflows/deploy-aaron-kokal.com.yml` requires redesign).

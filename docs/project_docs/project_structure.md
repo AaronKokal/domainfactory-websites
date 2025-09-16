@@ -1,30 +1,28 @@
 ---
 title: Project Structure
-description: Monorepo structure and folder responsibilities for DomainFactory Websites.
+description: Coordination repo layout for Sites Master.
 date: 2025-09-14T00:00:00Z
 draft: false
 tags: [Structure]
 categories: [Project]
 ---
 
-Repository Layout
-- `sites/<domain>/` — source per website
-  - `public/` — deploy root mirrored to the server
-  - `README.md` — the ONLY place for site‑specific notes. Do not create a `docs/` folder inside sites; all shared and long‑form documentation lives at the monorepo root under `docs/`.
-- `docs/` — global documentation for the monorepo
-  - `framework/` — immutable framework (Agent README, editing guide, migration guide, system blueprint, project README template)
-  - `project_docs/` — mission, tasks, stack, logs, and this structure
-  - `deep_dives/` — technical guides (e.g., DomainFactory SSH/rsync setup)
-  - `reports/` — inventories (e.g., websites inventory)
-- `templates/` — CI/CD templates and samples
-- `scripts/` — helper scripts (future)
+Repository Layout (`sites-master/`)
+- `docs/` — shared documentation for all sites (framework, project docs, deep dives, reports).
+- `scripts/` — helper scripts for deploys and maintenance.
+- `templates/` — reusable workflow/server templates.
+- `.github/workflows/` — automation that acts on shared assets (e.g., workflow templates); does **not** deploy individual sites directly anymore.
 
-Server Layout (SSH chroot)
+Sibling Layout (`../sites/`)
+- Each site is a standalone Git repository cloned beside this coordination repo (e.g., `../sites/aaron-kokal.com`).
+- Site repos own their build artifacts, GitHub Pages settings, and deployment workflows.
+
+Server Layout (DomainFactory SSH chroot)
 - Home root: `/kunden/485413_81379`
-- Projects: `~/webseiten/<site>`
-- Recommended docroot per site: `~/webseiten/<site>/public`
+- Projects root: `/kunden/485413_81379/webseiten`
+- Recommended docroot per site: `/kunden/485413_81379/webseiten/<site>/public`
 
 Operational Rules
-- Never deploy to the account root; only to `public/` of each site.
-- Use GitHub Environments per site to scope secrets.
-- Keep uploads/logs outside deploys or exclude via `.deployignore`.
+- Maintain inventories and shared policies in this repo; keep site-specific logic inside each site repo.
+- Use GitHub Environments per site repository to scope secrets.
+- Keep uploads/logs outside deploy directories or exclude via `.deployignore`.
