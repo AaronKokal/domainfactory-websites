@@ -25,7 +25,17 @@ if [[ -z "$SITE" ]]; then
 fi
 
 ROOT_DIR=$(cd "$(dirname "$0")/.." && pwd)
-SITE_DIR="$ROOT_DIR/sites/$SITE"
+
+# Allow site repos to live either inside this repo (legacy) or as a sibling folder (current layout).
+if [[ -d "$ROOT_DIR/sites/$SITE" ]]; then
+  SITE_DIR="$ROOT_DIR/sites/$SITE"
+elif [[ -d "$ROOT_DIR/../sites/$SITE" ]]; then
+  SITE_DIR=$(cd "$ROOT_DIR/../sites/$SITE" && pwd)
+else
+  echo "Could not locate site repository for '$SITE'. Expected '$ROOT_DIR/sites/$SITE' or '$(cd "$ROOT_DIR/.." && pwd)/sites/$SITE'." >&2
+  exit 1
+fi
+
 ENV_FILE="$SITE_DIR/deploy.env"
 
 if [[ ! -d "$SITE_DIR/public" ]]; then
@@ -45,7 +55,12 @@ HOST=${HOST:-}
 PORT=${PORT:-22}
 USER=${USER:-}
 WEBROOT=${WEBROOT:-}
-SOURCE=${SOURCE:-"sites/$SITE/public/"}
+
+# Default rsync source to the site's public directory when not overridden in deploy.env.
+SOURCE=${SOURCE:-"${SITE_DIR}/public/"}
+if [[ "$SOURCE" != /* ]]; then
+  SOURCE="$SITE_DIR/${SOURCE#./}"
+fi
 EXCLUDES=${EXCLUDES:-}
 
 if [[ -z "$WEBROOT" ]]; then
@@ -60,7 +75,17 @@ case "$WEBROOT" in
 esac
 
 RSYNC_FLAGS=( -az --delete )
-[[ -n "$EXCLUDES" && -f "$ROOT_DIR/$EXCLUDES" ]] && RSYNC_FLAGS+=( --exclude-from="$ROOT_DIR/$EXCLUDES" )
+
+# Support exclude files relative to the site directory.
+if [[ -n "$EXCLUDES" ]]; then
+  if [[ -f "$EXCLUDES" ]]; then
+    RSYNC_FLAGS+=( --exclude-from="$EXCLUDES" )
+  elif [[ -f "$SITE_DIR/$EXCLUDES" ]]; then
+    RSYNC_FLAGS+=( --exclude-from="$SITE_DIR/$EXCLUDES" )
+  else
+    echo "Warning: EXCLUDES file '$EXCLUDES' not found; continuing without it." >&2
+  fi
+fi
 [[ "$DRY_RUN" == true ]] && RSYNC_FLAGS+=( -n -v )
 
 if [[ -n "$SSH_ALIAS" ]]; then
@@ -74,8 +99,6 @@ else
   exit 2
 fi
 
-cd "$ROOT_DIR"
 echo "Deploying '$SITE' → $DEST"
 rsync "${RSYNC_FLAGS[@]}" "${RSYNC_SSH[@]}" "$SOURCE" "$DEST"
 echo "Done." 
-

@@ -3,13 +3,14 @@ Sites Master
 
 Purpose
 - Acts as the coordination repo for Aaron Kokal web properties hosted via DomainFactory or GitHub Pages.
-- Holds shared documentation (`docs/`), deployment helpers (`scripts/`, `templates/`), and CI configuration that is reused across sites.
+- Provides deployment helpers (`scripts/`, `templates/`) and CI configuration that is reused across sites.
+- Hosts the shared documentation under `docs/`.
 - Individual sites live in their **own** Git repositories that may be cloned beside this folder (e.g. `../sites/<domain>`). They are not checked into this repo.
 
 Current Layout
-- `docs/` — framework + living project docs (tasks, logs, structure, inventories, deep dives).
 - `scripts/` — helper scripts for deploys and maintenance.
 - `templates/` — CI/CD workflow blueprints and server configs (workflows now live under `templates/workflows/`).
+- Shared docs live in `docs/` at the repo root.
 
 Working With Site Repos
 1. Clone or create the site repository next to this folder, e.g. `../sites/aaron-kokal.com`.

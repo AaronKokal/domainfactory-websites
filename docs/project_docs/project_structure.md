@@ -7,14 +7,18 @@ tags: [Structure]
 categories: [Project]
 ---
 
-Repository Layout (`sites-master/`)
-- `docs/` — shared documentation for all sites (framework, project docs, deep dives, reports).
+Repository Layout (`own_websites-projects/` root)
+- `sites-master/` — coordination repository containing shared docs, scripts, and templates.
+- `sites/` — working copies of each live site (e.g., `sites/aaron-kokal.com`). Each remains a standalone Git repository.
+
+`sites-master/` Contents
+- `docs/` — shared documentation for the website fleet (framework, project docs, deep dives, reports).
 - `scripts/` — helper scripts for deploys and maintenance.
 - `templates/` — reusable workflow/server templates (per-site GitHub Actions YAML files live in `templates/workflows/`).
 
-Sibling Layout (`../sites/`)
-- Each site is a standalone Git repository cloned beside this coordination repo (e.g., `../sites/aaron-kokal.com`).
-- Site repos own their build artifacts, GitHub Pages settings, and deployment workflows. Copy needed templates from this repo into each site.
+`sites/` Expectations
+- Each site owns its build artifacts, GitHub Pages settings, and deployment workflows. Copy needed templates from `sites-master/templates/` into the site repo when wiring automation.
+- Site-specific documentation should live with the site unless it is broadly applicable, in which case promote it to `docs/`.
 
 Server Layout (DomainFactory SSH chroot)
 - Home root: `/kunden/485413_81379`

@@ -65,7 +65,7 @@
   - `SSH_USER`: `ssh-485413-admin`
   - `WEBROOT`: absolute server path to the site folder, e.g. `/kunden/485413_81379/webseiten/schallvagabunden`
   - `SSH_KEY`: the CI deploy private key created above
-- Minimal workflow (see `domainfactory-websites/DEPLOY_TEMPLATE.md` for a copy‑paste):
+- Minimal workflow (see `docs/deep_dives/domainfactory_setup_and_deploy.md` under "GitHub Actions Workflow Template"):
   - Checks out repo, optionally builds, adds host key with `ssh-keyscan`, then `rsync -az --delete --exclude-from=.deployignore` to `$WEBROOT` over SSH.
 
 **WordPress-Specific Deploy Notes**

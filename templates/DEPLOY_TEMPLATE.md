@@ -1,38 +1,52 @@
-Moved from repo root. See this file for GitHub Actions rsync workflow and `.deployignore` guidance for per‑site deploys.
+# DomainFactory Static Deploy Workflow Template
 
-The original content is preserved below.
+> This template powers the `aaron-kokal.com` static site deploy and any similar DomainFactory rsync setups. For full documentation see `docs/deep_dives/domainfactory_static_site_scenario.md` and `docs/deep_dives/domainfactory_setup_and_deploy.md`.
 
-**Purpose**
-- Copy-paste template for deploying a site from GitHub Actions to DomainFactory via rsync over SSH.
-
-**Required GitHub Secrets (per repo)**
-- `SSH_HOST`: `schallvagabunden.de`
-- `SSH_PORT`: `22`
-- `SSH_USER`: `ssh-485413-admin`
-- `WEBROOT`: absolute path to the target on server, e.g. `/kunden/485413_81379/webseiten/schallvagabunden`
-- `SSH_KEY`: private key contents for the CI deploy key (create with `ssh-keygen -t ed25519 -C df-ci` and place the public key in `~/.ssh/authorized_keys` on the server)
+**Required GitHub Secrets (per site repo / environment)**
+- `SSH_HOST`
+- `SSH_PORT`
+- `SSH_USER`
+- `WEBROOT`
+- `SSH_KEY`
 
 **Optional Repository Files**
-- `.deployignore` — patterns to exclude (see WordPress example below)
+- `.deployignore` — Exclusion patterns (WordPress example below)
+- `deploy.env` — Used by `sites-master/scripts/deploy.sh` for manual pushes
 
-**.github/workflows/deploy.yml**
+**Workflow Skeleton (`.github/workflows/deploy.yml`)**
 
 ```yaml
-name: Deploy
+name: Deploy <your-domain>
 
 on:
   push:
     branches: [ main ]
+    paths:
+      - 'public/**'
+      - '.github/workflows/deploy.yml'
+      - 'deploy.env'
+      - 'README.md'
+  workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    concurrency:
+      group: deploy-<your-domain>
+      cancel-in-progress: true
+    environment:
+      name: <your-domain>-prod
+      url: https://<your-domain>
     steps:
       - uses: actions/checkout@v4
 
-      # Add build steps here if needed, e.g.:
-      # - run: npm ci && npm run build
-      # - run: composer install --no-dev --prefer-dist
+      - name: Validate required secrets
+        run: |
+          test -n "${{ secrets.SSH_HOST }}" || { echo 'Missing secret SSH_HOST' >&2; exit 1; }
+          test -n "${{ secrets.SSH_PORT }}" || { echo 'Missing secret SSH_PORT' >&2; exit 1; }
+          test -n "${{ secrets.SSH_USER }}" || { echo 'Missing secret SSH_USER' >&2; exit 1; }
+          test -n "${{ secrets.WEBROOT }}" || { echo 'Missing secret WEBROOT' >&2; exit 1; }
+          test -n "${{ secrets.SSH_KEY }}" || { echo 'Missing secret SSH_KEY' >&2; exit 1; }
 
       - name: Setup SSH
         env:
@@ -45,11 +59,27 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -p "$SSH_PORT" "$SSH_HOST" >> ~/.ssh/known_hosts
 
-      - name: Rsync deploy
+      - name: Test SSH connection
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          SSH_USER: ${{ secrets.SSH_USER }}
         run: |
-          rsync -az --delete --exclude-from=.deployignore \
-            -e "ssh -p ${{ secrets.SSH_PORT }}" ./ \
-            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.WEBROOT }}
+          chmod 700 ~/.ssh
+          chmod 600 ~/.ssh/known_hosts || true
+          ssh -i ~/.ssh/id_ed25519 -o BatchMode=yes -o IdentitiesOnly=yes -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" 'echo ok'
+
+      - name: Rsync deploy
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          WEBROOT: ${{ secrets.WEBROOT }}
+        run: |
+          rsync -az --delete \
+            -e "ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes -p ${SSH_PORT}" \
+            public/ \
+            ${SSH_USER}@${SSH_HOST}:${WEBROOT}
 ```
 
 **WordPress `.deployignore` Example**
@@ -65,6 +95,12 @@ wp-content/upgrade/
 wp-content/wflogs/
 ```
 
-**Dry‑Run From Local (Safety Check)**
-- `rsync -azvn --delete --exclude-from=.deployignore -e "ssh -i ~/.ssh/id_ed25519_df_ci -o IdentitiesOnly=yes" ./ ssh-485413-admin@schallvagabunden.de:/kunden/485413_81379/webseiten/<site>`
+**Local Dry Run Example**
 
+```bash
+rsync -azvn --delete --exclude-from=.deployignore \
+  -e "ssh -i ~/.ssh/id_ed25519_df_ci -o IdentitiesOnly=yes" ./public/ \
+  ssh-485413-admin@schallvagabunden.de:/kunden/485413_81379/webseiten/<site>/public
+```
+
+Adapt the template as needed (build steps, directories) and keep the docs linked above updated when this workflow evolves.
