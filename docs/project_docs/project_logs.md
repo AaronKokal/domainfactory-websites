@@ -196,3 +196,7 @@ categories: [Project]
 2025-09-20 — aaron-kokal.com rsync Deploy Verified
 - Updated `scripts/deploy.sh` to locate site repos outside `sites-master` and set executable bit.
 - Performed dry-run and live deploy for `aaron-kokal.com` via `scripts/deploy.sh aaron-kokal.com --alias df-admin`; rsync completed without changes beyond confirming current content.
+
+2025-09-20 — Jekyll + Decap Plan Logged
+- Created `docs/deep_dives/jekyll_github_pages_decap_mailcoach_plan.md` targeting the talk.aaron-kokal.com rebuild on Jekyll + GitHub Pages with Decap, OAuth bridge, and Mailcoach.
+- Updated `docs/reports/websites_inventory.md` to reflect lab.aron-kokal.com running on Jekyll/Chirpy and to note the talk site migration path; linked the new deep dive from the hosting scenarios overview.

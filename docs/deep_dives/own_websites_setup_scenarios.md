@@ -139,6 +139,7 @@ The monorepo keeps reusable templates in `sites-master/` and project code under 
 - Add a GitHub Actions workflow that builds the site and publishes to Pages; pair it with a preview workflow (`on: pull_request`) to generate temporary URLs.
 - Define an assets strategy: store media under `static/uploads/` committed to Git or point Decap to a third-party store (Cloudinary/S3) if uploads become heavy.
 - Document the editorial workflow (create entry → submit for review → preview → merge) in each site's README.
+- Detailed rollout plan (starting with talk.aaron-kokal.com): see `docs/deep_dives/jekyll_github_pages_decap_mailcoach_plan.md`.
 
 **When to choose**
 - You prioritize long-term portability and a modern component-based stack.
