@@ -200,3 +200,12 @@ categories: [Project]
 2025-09-20 — Jekyll + Decap Plan Logged
 - Created `docs/deep_dives/jekyll_github_pages_decap_mailcoach_plan.md` targeting the talk.aaron-kokal.com rebuild on Jekyll + GitHub Pages with Decap, OAuth bridge, and Mailcoach.
 - Updated `docs/reports/websites_inventory.md` to reflect lab.aron-kokal.com running on Jekyll/Chirpy and to note the talk site migration path; linked the new deep dive from the hosting scenarios overview.
+
+
+## 2025-09-24T08Z — Synced framework docs
+- Type: Decision
+- Context: Upstream canonical repo introduced `agents.template.md` and refreshed onboarding guidance; this repo needed the latest framework bundle.
+- Action: Copied `docs/framework_docs/` contents and helper scripts from `t-0_docs_framework`, creating skeleton project docs if they were missing.
+- Why: Align with the shared framework contract (FRAMEWORK_CONTRACT.md) so canonical docs stay consistent across projects.
+- Outcome: Framework docs now match the latest template while repository-specific docs remain untouched.
+- Refs: docs/framework_docs/agents.template.md; docs/framework_docs/SETUP_GUIDE.md
